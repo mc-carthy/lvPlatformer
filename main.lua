@@ -13,6 +13,9 @@ function love.load()
   require('coin')
   anim8 = require('anim8')
   sti = require('sti')
+  camera = require('camera')
+
+  cam = camera()
 
   platforms = {}
   spawnCoin(600, 350)
@@ -29,6 +32,7 @@ function love.load()
 end
 
 function love.draw()
+  cam:attach()
   gameMap:drawLayer(gameMap.layers['Tile Layer 1'])
 
   for i, c in ipairs(coins) do
@@ -36,6 +40,7 @@ function love.draw()
   end
 
   love.graphics.draw(player.sprite, player.body:getX(), player.body:getY(), nil, player.direction, 1, sprites.player_stand:getWidth() / 2, sprites.player_stand:getHeight() / 2)
+  cam:detach()
 end
 
 function love.update(dt)
@@ -43,6 +48,7 @@ function love.update(dt)
   gameMap:update(dt)
   playerUpdate(dt)
   coinsUpdate(dt)
+  cam:lookAt(player.body:getX(), player.body:getY())
 end
 
 function love.keypressed(key, scancode, isrepeat)
