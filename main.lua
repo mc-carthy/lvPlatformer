@@ -48,7 +48,7 @@ function love.update(dt)
   gameMap:update(dt)
   playerUpdate(dt)
   coinsUpdate(dt)
-  cam:lookAt(player.body:getX(), player.body:getY())
+  cam:lookAt(player.body:getX(), love.graphics.getHeight() / 2)
 end
 
 function love.keypressed(key, scancode, isrepeat)
