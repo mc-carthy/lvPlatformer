@@ -15,7 +15,7 @@ function love.load()
   sti = require('sti')
 
   platforms = {}
-  spawnCoin(200, 100)
+  spawnCoin(600, 350)
 
   gameMap = sti("maps/lvPlatformerMap.lua")
 
@@ -28,7 +28,7 @@ function love.draw()
   gameMap:drawLayer(gameMap.layers['Tile Layer 1'])
 
   for i, c in ipairs(coins) do
-    c.animation:draw(sprites.coin_sheet, c.x, c.y)
+    c.animation:draw(sprites.coin_sheet, c.x, c.y, nil, nil, nil, 20.5, 21)
   end
 
   love.graphics.draw(player.sprite, player.body:getX(), player.body:getY(), nil, player.direction, 1, sprites.player_stand:getWidth() / 2, sprites.player_stand:getHeight() / 2)
@@ -64,4 +64,8 @@ function spawnPlatform(x, y, width, height)
   platform.height = height
 
   table.insert(platforms, platform)
+end
+
+function distance(x1, y1, x2, y2)
+  return math.sqrt((x2 - x1)^2 + (y2 - y1)^2)
 end
