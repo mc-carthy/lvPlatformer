@@ -1,4 +1,6 @@
 function love.load()
+  love.window.setMode(900, 700)
+
   myWorld = love.physics.newWorld(0, 500, false)
   myWorld:setCallbacks(beginContact, endContact, preSolve, postSolve)
 
@@ -10,13 +12,18 @@ function love.load()
   require('player')
   require('coin')
   anim8 = require('anim8')
+  sti = require('sti')
 
   platforms = {}
   spawnPlatform(50, 400, 300, 30)
   spawnCoin(200, 100)
+
+  gameMap = sti("maps/lvPlatformerMap.lua")
+  gameMap:update(dt)
 end
 
 function love.draw()
+  gameMap:drawLayer(gameMap.layers['Tile Layer 1'])
   for i, p in ipairs(platforms) do
     love.graphics.rectangle("fill", p.body:getX(), p.body:getY(), p.width, p.height)
   end
