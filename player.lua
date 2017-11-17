@@ -4,7 +4,7 @@ player.body:setFixedRotation(true)
 player.shape = love.physics.newRectangleShape(66, 92)
 player.fixture = love.physics.newFixture(player.body, player.shape)
 player.speed = 200
-player.jumpForce = 2500
+player.jumpForce = 3000
 player.grounded = false
 player.direction = 1
 player.sprite = sprites.player_stand
