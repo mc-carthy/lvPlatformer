@@ -1,5 +1,5 @@
 player = {}
-player.body = love.physics.newBody(myWorld, 100, 100, "dynamic")
+player.body = love.physics.newBody(myWorld, 500, 100, "dynamic")
 player.body:setFixedRotation(true)
 player.shape = love.physics.newRectangleShape(66, 92)
 player.fixture = love.physics.newFixture(player.body, player.shape)

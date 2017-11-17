@@ -15,18 +15,17 @@ function love.load()
   sti = require('sti')
 
   platforms = {}
-  spawnPlatform(50, 400, 300, 30)
   spawnCoin(200, 100)
 
   gameMap = sti("maps/lvPlatformerMap.lua")
-  gameMap:update(dt)
+
+  for i, obj in pairs(gameMap.layers["Platforms"].objects) do
+    spawnPlatform(obj.x, obj.y, obj.width, obj.height)
+  end
 end
 
 function love.draw()
   gameMap:drawLayer(gameMap.layers['Tile Layer 1'])
-  for i, p in ipairs(platforms) do
-    love.graphics.rectangle("fill", p.body:getX(), p.body:getY(), p.width, p.height)
-  end
 
   for i, c in ipairs(coins) do
     c.animation:draw(sprites.coin_sheet, c.x, c.y)
@@ -37,6 +36,7 @@ end
 
 function love.update(dt)
   myWorld:update(dt)
+  gameMap:update(dt)
   playerUpdate(dt)
   coinsUpdate(dt)
 end
