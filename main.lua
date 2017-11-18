@@ -11,6 +11,7 @@ function love.load()
 
   require('player')
   require('coin')
+  require('show')
   anim8 = require('anim8')
   sti = require('sti')
   camera = require('camera')
@@ -19,6 +20,13 @@ function love.load()
   gameState = 1
   myFont = love.graphics.newFont(30)
   timer = 0
+
+  saveData = {}
+  saveData.bestTime = 999
+  if (love.filesystem.exists('data.lua')) then
+    local data = love.filesystem.load('data.lua')
+    data()
+  end
 
   platforms = {}
 
@@ -46,6 +54,7 @@ function love.draw()
   if (gameState == 1) then
     love.graphics.setFont(myFont)
     love.graphics.printf("Press any key to begin!", 0, 50, love.graphics.getWidth(), "center")
+    love.graphics.printf("Best time: " .. saveData.bestTime, 0, 150, love.graphics.getWidth(), "center")
   end
 
   love.graphics.print("Time: " .. math.floor(timer), 10, 660)
@@ -109,6 +118,11 @@ function resetGame()
 
     if (#coins == 0) then
         spawnCoins()
+    end
+
+    if (timer < saveData.bestTime) then
+        saveData.bestTime = math.floor(timer)
+        love.filesystem.write('data.lua', table.show(saveData, "saveData"))
     end
 end
 
