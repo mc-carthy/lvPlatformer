@@ -16,6 +16,8 @@ function love.load()
   camera = require('camera')
 
   cam = camera()
+  gameState = 1
+  myFont = love.graphics.newFont(30)
 
   platforms = {}
   spawnCoin(600, 350)
@@ -41,19 +43,31 @@ function love.draw()
 
   love.graphics.draw(player.sprite, player.body:getX(), player.body:getY(), nil, player.direction, 1, sprites.player_stand:getWidth() / 2, sprites.player_stand:getHeight() / 2)
   cam:detach()
+
+  -- Add UI draw calls after cam:detach
+  if (gameState == 1) then
+    love.graphics.setFont(myFont)
+    love.graphics.printf("Press any key to begin!", 0, 50, love.graphics.getWidth(), "center")
+  end
 end
 
 function love.update(dt)
   myWorld:update(dt)
   gameMap:update(dt)
-  playerUpdate(dt)
+  if (gameState == 2) then
+    playerUpdate(dt)
+  end
   coinsUpdate(dt)
   cam:lookAt(player.body:getX(), love.graphics.getHeight() / 2)
 end
 
 function love.keypressed(key, scancode, isrepeat)
-  if (key == 'up' and player.grounded) then
-    player.body:applyLinearImpulse(0, -player.jumpForce)
+  if (gameState == 1) then
+    gameState = 2
+  elseif (gameState == 2) then
+    if (key == 'up' and player.grounded) then
+        player.body:applyLinearImpulse(0, -player.jumpForce)
+    end
   end
 end
 
