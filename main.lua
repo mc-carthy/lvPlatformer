@@ -18,9 +18,9 @@ function love.load()
   cam = camera()
   gameState = 1
   myFont = love.graphics.newFont(30)
+  timer = 0
 
   platforms = {}
-  spawnCoin(600, 350)
 
   gameMap = sti("maps/lvPlatformerMap.lua")
 
@@ -28,9 +28,7 @@ function love.load()
     spawnPlatform(obj.x, obj.y, obj.width, obj.height)
   end
 
-  for i, obj in pairs(gameMap.layers["Coins"].objects) do
-    spawnCoin(obj.x, obj.y, obj.width, obj.height)
-  end
+  spawnCoins()
 end
 
 function love.draw()
@@ -49,6 +47,8 @@ function love.draw()
     love.graphics.setFont(myFont)
     love.graphics.printf("Press any key to begin!", 0, 50, love.graphics.getWidth(), "center")
   end
+
+  love.graphics.print("Time: " .. math.floor(timer), 10, 660)
 end
 
 function love.update(dt)
@@ -56,14 +56,17 @@ function love.update(dt)
   gameMap:update(dt)
   if (gameState == 2) then
     playerUpdate(dt)
+    incrementTimer(dt)
   end
   coinsUpdate(dt)
+  checkCoinCount()
   cam:lookAt(player.body:getX(), love.graphics.getHeight() / 2)
 end
 
 function love.keypressed(key, scancode, isrepeat)
   if (gameState == 1) then
     gameState = 2
+    timer = 0
   elseif (gameState == 2) then
     if (key == 'up' and player.grounded) then
         player.body:applyLinearImpulse(0, -player.jumpForce)
@@ -88,6 +91,31 @@ function spawnPlatform(x, y, width, height)
   platform.height = height
 
   table.insert(platforms, platform)
+end
+
+function incrementTimer(dt)
+    timer = timer + dt
+end
+
+function checkCoinCount()
+    if (#coins == 0 and gameState == 2) then
+        resetGame()
+    end
+end
+
+function resetGame()
+    gameState = 1
+    player.body:setPosition(500, 443)
+
+    if (#coins == 0) then
+        spawnCoins()
+    end
+end
+
+function spawnCoins()
+    for i, obj in pairs(gameMap.layers["Coins"].objects) do
+        spawnCoin(obj.x, obj.y, obj.width, obj.height)
+    end
 end
 
 function distance(x1, y1, x2, y2)
